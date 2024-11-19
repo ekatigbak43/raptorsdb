@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2024 at 12:30 AM
+-- Generation Time: Nov 19, 2024 at 11:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,7 +40,13 @@ CREATE TABLE `articles` (
 --
 
 INSERT INTO `articles` (`article_id`, `title`, `content`, `author_id`, `created_at`) VALUES
-(1, 'Top 10 Raptors Players of All Time', '1. Kyle Lowry\r\n2. Vince Carter\r\n3. Kawhi Leonard\r\n4. Demar DeRozan\r\n5. Pascal Siakam', 1, '2024-11-16 21:37:08');
+(5, 'Top 10 Raptors Players of All Time', '1. Kyle Lowry\r\n2. Vince Carter\r\n3. Kawhi Leonard\r\n4. Demar DeRozan\r\n5. Pascal Siakam\r\n6. Chris Bosh\r\n7. Fred VanVleet\r\n8. Marc Gasol\r\n9. Damon Stoudamire\r\n10. Tracy McGrady', 2, '2024-11-16 23:46:24'),
+(6, 'Top 5 Toronto Raptors Jerseys', 'The Toronto Raptors have worn \r\n\r\n1. &quot;Dinosaur&quot; Uniform worn (1995 to 1999)\r\n2.  Red North chevron (2019 NBA Championship)\r\n3.  Toronto Huskies throwbacks (2009, 2016)\r\n4. Purple/Black Vince Carter era (1999 to 2003)\r\n5.  Canadian Armed Forces Camo(2011, 2012)', 2, '2024-11-18 04:31:12'),
+(7, 'Vince Carter Jersey Retirement Ceremony', 'On November 2, 2024 the Toronto Raptors officially retired Vince Carter&#039;s #15 in the rafters of Scotiabank Arena. He is the player in the Toronto Raptors history to have his jersey retired. A well deserving honour, despite the love/hate relationship throughout the years.', 2, '2024-11-18 04:34:06'),
+(8, 'Latest Scottie Barnes Injury Update', 'Scottie Barnes spotted wearing a protective mask while participating in shootaround with the team on November 14, 2024.\r\n\r\nThere are still no current timeline for his return, from the injury he suffered back in October 28 against the Denver Nuggets.', 2, '2024-11-18 04:36:06'),
+(9, 'Struggling Raptors lose to the Celtics in OT to a Tatum last-minute game-winner', 'Boston Celtics star Jayson Tatum had 24 points, 11 rebounds and 9 assists in the 126-123 victory against the Toronto Raptors.\r\n\r\nRJ Barrett recorded his first triple-double in the loss with 25 points, 15 assists (career-high) and 10 rebounds.', 2, '2024-11-18 04:38:48'),
+(10, 'Game Preview: Indianapolis Pacers at Toronto Raptors', 'The Indiana Pacers (6-7) will travel to Toronto to take on the Raptors (2-12) on November 18, 2024. Former Toronto Raptors star Pascal Siakam expected to be playing as well. \r\n\r\nLast time they met was on April 9, 2024 where Tyrese Haliburton scored 30 points to lead the Pacers to a 140-123 win.', 2, '2024-11-18 05:22:02'),
+(11, 'Looking back at the Pascal Siakam Trade', 'In January 17, 2024 the Toronto Raptors traded the last piece in their championship team - Pascal Siakam. The Raptors received three first-round draft picks and a trade-bait player in Bruce Brown. Some critics feel that the Raptors did not get a big enough return for their former all-NBA player but time will tell to see who won the trade.\r\n\r\nAs of writing, the Pacers are currently 6-7 in the 2024-2025 campaign and we have yet to see what type of picks the Toronto Raptors make and what return they can get out of the injury-ridden Bruce Brown, who has proven himself to be a significant role player with his contributions to the Denver Nuggets NBA Championship campaign a few years ago.', 2, '2024-11-18 05:28:28');
 
 -- --------------------------------------------------------
 
@@ -102,7 +108,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`) VALUES
-(1, 'erwink', '$2y$10$JOM652JEz2iTR5pSqX6anuF8BKT72Mro1NZnDWcyr72QnFxyZ0pF6', 'admin');
+(2, 'ekatigbak43', '$2y$10$h1o2qv4EmktRAHkZrbgsoO5xOV2n8Wzf0DYR8YTfmDQJXiEGJEeRi', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -148,7 +154,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `article_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `article_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `game_logs`
@@ -166,7 +172,7 @@ ALTER TABLE `teams`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
