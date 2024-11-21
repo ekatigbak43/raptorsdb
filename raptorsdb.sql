@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2024 at 11:30 PM
+-- Generation Time: Nov 21, 2024 at 01:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,30 @@ INSERT INTO `articles` (`article_id`, `title`, `content`, `author_id`, `created_
 (8, 'Latest Scottie Barnes Injury Update', 'Scottie Barnes spotted wearing a protective mask while participating in shootaround with the team on November 14, 2024.\r\n\r\nThere are still no current timeline for his return, from the injury he suffered back in October 28 against the Denver Nuggets.', 2, '2024-11-18 04:36:06'),
 (9, 'Struggling Raptors lose to the Celtics in OT to a Tatum last-minute game-winner', 'Boston Celtics star Jayson Tatum had 24 points, 11 rebounds and 9 assists in the 126-123 victory against the Toronto Raptors.\r\n\r\nRJ Barrett recorded his first triple-double in the loss with 25 points, 15 assists (career-high) and 10 rebounds.', 2, '2024-11-18 04:38:48'),
 (10, 'Game Preview: Indianapolis Pacers at Toronto Raptors', 'The Indiana Pacers (6-7) will travel to Toronto to take on the Raptors (2-12) on November 18, 2024. Former Toronto Raptors star Pascal Siakam expected to be playing as well. \r\n\r\nLast time they met was on April 9, 2024 where Tyrese Haliburton scored 30 points to lead the Pacers to a 140-123 win.', 2, '2024-11-18 05:22:02'),
-(11, 'Looking back at the Pascal Siakam Trade', 'In January 17, 2024 the Toronto Raptors traded the last piece in their championship team - Pascal Siakam. The Raptors received three first-round draft picks and a trade-bait player in Bruce Brown. Some critics feel that the Raptors did not get a big enough return for their former all-NBA player but time will tell to see who won the trade.\r\n\r\nAs of writing, the Pacers are currently 6-7 in the 2024-2025 campaign and we have yet to see what type of picks the Toronto Raptors make and what return they can get out of the injury-ridden Bruce Brown, who has proven himself to be a significant role player with his contributions to the Denver Nuggets NBA Championship campaign a few years ago.', 2, '2024-11-18 05:28:28');
+(11, 'Looking back at the Pascal Siakam Trade', 'In January 17, 2024 the Toronto Raptors traded the last piece in their championship team - Pascal Siakam. The Raptors received three first-round draft picks and a trade-bait player in Bruce Brown. Some critics feel that the Raptors did not get a big enough return for their former all-NBA player but time will tell to see who won the trade.\r\n\r\nAs of writing, the Pacers are currently 6-7 in the 2024-2025 campaign and we have yet to see what type of picks the Toronto Raptors make and what return they can get out of the injury-ridden Bruce Brown, who has proven himself to be a significant role player with his contributions to the Denver Nuggets NBA Championship campaign a few years ago.', 2, '2024-11-18 05:28:28'),
+(12, 'Barrett scores 39 points to lift Raptors against the Pacers', 'Canadian RJ Barrett scored 39 points in 35 minutes to lift the Raptors against the Indiana Pacers at home. He also added 9 rebounds and 5 assists in his efforts. Jakob Poeltl continues his hot-streak by contributing 30 points and 15 rounds. \r\n\r\nFormer Raptor, Pascal Siakam played well despite the loss scoring 25 points, 10 rebounds and 5 assists. \r\n\r\nThe Toronto Raptors are now 3-12, and will host the Anthony Edwards and the Minnesota Timberwolves on Thursday November 21, 2024.\r\n', 2, '2024-11-19 23:12:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `article_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `article_id`, `user_id`, `comment`, `created_at`) VALUES
+(1, 12, 2, 'Hello ', '2024-11-19 23:31:35'),
+(2, 12, 3, 'RJ the goat', '2024-11-19 23:45:48');
 
 -- --------------------------------------------------------
 
@@ -108,7 +131,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`) VALUES
-(2, 'ekatigbak43', '$2y$10$h1o2qv4EmktRAHkZrbgsoO5xOV2n8Wzf0DYR8YTfmDQJXiEGJEeRi', 'admin');
+(2, 'ekatigbak43', '$2y$10$h1o2qv4EmktRAHkZrbgsoO5xOV2n8Wzf0DYR8YTfmDQJXiEGJEeRi', 'admin'),
+(3, 'raptorsfan1', '$2y$10$BMtloV61eW2F3S3RkiVfEe/Je372uLCzo3q6YXcTa0G5MHijDlRam', 'user');
 
 --
 -- Indexes for dumped tables
@@ -120,6 +144,14 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role`) VALUES
 ALTER TABLE `articles`
   ADD PRIMARY KEY (`article_id`),
   ADD KEY `author_id` (`author_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `article_id` (`article_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `game_logs`
@@ -154,7 +186,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `article_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `article_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `game_logs`
@@ -172,7 +210,7 @@ ALTER TABLE `teams`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -183,6 +221,13 @@ ALTER TABLE `users`
 --
 ALTER TABLE `articles`
   ADD CONSTRAINT `articles_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`article_id`) REFERENCES `articles` (`article_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `game_logs`
