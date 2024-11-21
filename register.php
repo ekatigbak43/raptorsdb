@@ -57,7 +57,6 @@ if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['role'])) {
 
         <label for="role">Role:</label>
         <select id="role" name="role" required>
-            <option value="admin">Admin</option>
             <option value="editor">Editor</option>
             <option value="user">User</option>
         </select>
