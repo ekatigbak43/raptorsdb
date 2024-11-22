@@ -1,5 +1,6 @@
 <?php
 require('connect.php');
+session_start();
 
 $articles_per_page = 5;
 

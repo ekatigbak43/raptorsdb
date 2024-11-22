@@ -1,32 +1,37 @@
 <?php
 require('connect.php');
 
-if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['role'])) {
+if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['confirm_password'], $_POST['role'])) {
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $plaintext_password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    $hashed_password = password_hash($plaintext_password, PASSWORD_DEFAULT);
+    // Validate that passwords match
+    if ($plaintext_password === $confirm_password) {
+        $hashed_password = password_hash($plaintext_password, PASSWORD_DEFAULT);
 
-    try {
-        $query = "INSERT INTO users (username, password, role) VALUES (:username, :password, :role)";
-        $statement = $db->prepare($query);
-        $statement->bindValue(':username', $username);
-        $statement->bindValue(':password', $hashed_password);
-        $statement->bindValue(':role', $role);
+        try {
+            $query = "INSERT INTO users (username, password, role) VALUES (:username, :password, :role)";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':username', $username);
+            $statement->bindValue(':password', $hashed_password);
+            $statement->bindValue(':role', $role);
 
-        if ($statement->execute()) {
-            header("Location: post_registration.php");
-            exit;
-        } else {
-            $error = "Error registering user.";
+            if ($statement->execute()) {
+                header("Location: post_registration.php");
+                exit;
+            } else {
+                $error = "Error registering user.";
+            }
+        } catch (PDOException $e) {
+            $error = "Error: " . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        $error = "Error: " . $e->getMessage();
+    } else {
+        $error = "Passwords do not match. Please try again.";
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,10 +45,6 @@ if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['role'])) {
     <?php include('nav.php'); ?>
     <h1>Register</h1>
 
-    <?php if (isset($success)): ?>
-        <p style="color: green;"><?= $success ?></p>
-    <?php endif; ?>
-
     <?php if (isset($error)): ?>
         <p style="color: red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
@@ -54,6 +55,9 @@ if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['role'])) {
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
 
         <label for="role">Role:</label>
         <select id="role" name="role" required>
