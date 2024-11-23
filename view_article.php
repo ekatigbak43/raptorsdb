@@ -5,7 +5,7 @@ session_start();
 if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
     $article_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-    $article_query = "SELECT a.title, a.content, a.created_at, u.username AS author 
+    $article_query = "SELECT a.title, a.content, a.created_at, a.image, u.username AS author 
                       FROM articles a 
                       JOIN users u ON a.author_id = u.user_id 
                       WHERE a.article_id = :id";
@@ -52,6 +52,7 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,6 +68,12 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
         <?php if (isset($error)): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php else: ?>
+            <?php if (!empty($article['image'])): ?>
+                <div class="mb-4 text-center">
+                    <img src="uploads/<?= htmlspecialchars($article['image']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($article['title']) ?>">
+                </div>
+            <?php endif; ?>
+
             <h1 class="text-center"><?= htmlspecialchars($article['title']) ?></h1>
             <p><strong>By:</strong> <?= htmlspecialchars($article['author']) ?></p>
             <p><strong>Published on:</strong> <?= htmlspecialchars($article['created_at']) ?></p>
