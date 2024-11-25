@@ -3,15 +3,35 @@ require('connect.php');
 session_start();
 
 $search_results = [];
+$error = null;
+
+$items_per_page = isset($_GET['n']) && is_numeric($_GET['n']) ? (int)$_GET['n'] : 5;
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $items_per_page;
+
 if ($_GET && isset($_GET['q'])) {
     $query = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     try {
+        $count_sql = "SELECT COUNT(*) AS total 
+                      FROM articles 
+                      WHERE title LIKE :query OR content LIKE :query";
+        $count_statement = $db->prepare($count_sql);
+        $count_statement->bindValue(':query', '%' . $query . '%');
+        $count_statement->execute();
+        $total_results = $count_statement->fetch(PDO::FETCH_ASSOC)['total'];
+
+        $total_pages = ceil($total_results / $items_per_page);
+
         $sql = "SELECT article_id, title, created_at 
                 FROM articles 
                 WHERE title LIKE :query OR content LIKE :query 
-                ORDER BY created_at DESC";
+                ORDER BY created_at DESC 
+                LIMIT :limit OFFSET :offset";
         $statement = $db->prepare($sql);
         $statement->bindValue(':query', '%' . $query . '%');
+        $statement->bindValue(':limit', $items_per_page, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
         $search_results = $statement->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $exception) {
@@ -45,8 +65,31 @@ if ($_GET && isset($_GET['q'])) {
                     </li>
                 <?php endforeach; ?>
             </ul>
+            <nav aria-label="Search result pages" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <?php if ($page > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?q=<?= urlencode($query) ?>&n=<?= $items_per_page ?>&page=<?= $page - 1 ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Previous</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <li class="page-item <?= $i === $page ? 'active' : '' ?>">
+                            <a class="page-link" href="?q=<?= urlencode($query) ?>&n=<?= $items_per_page ?>&page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <?php if ($page < $total_pages): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?q=<?= urlencode($query) ?>&n=<?= $items_per_page ?>&page=<?= $page + 1 ?>" aria-label="Next">
+                                <span aria-hidden="true">Next &raquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         <?php else: ?>
-            <p class="text-center mt-4">No results found for your search query.</p>
+            <p class="text-center mt-4">No results found.</p>
         <?php endif; ?>
     </div>
     <?php include('footer.php'); ?>

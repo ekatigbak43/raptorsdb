@@ -27,31 +27,10 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
     $comment_statement->bindValue(':article_id', $article_id, PDO::PARAM_INT);
     $comment_statement->execute();
     $comments = $comment_statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($_GET && isset($_GET['delete_comment']) && is_numeric($_GET['delete_comment'])) {
-        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-            $delete_comment_id = filter_input(INPUT_GET, 'delete_comment', FILTER_SANITIZE_NUMBER_INT);
-
-            $delete_query = "DELETE FROM comments WHERE comment_id = :comment_id";
-            $delete_statement = $db->prepare($delete_query);
-            $delete_statement->bindValue(':comment_id', $delete_comment_id, PDO::PARAM_INT);
-
-            if ($delete_statement->execute()) {
-                header("Location: view_article.php?id={$article_id}");
-                exit;
-            } else {
-                $error = "Failed to delete comment.";
-            }
-        } else {
-            $error = "You do not have permission to delete comments.";
-        }
-    }
-
 } else {
     $error = "Invalid or missing article ID.";
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,6 +58,12 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
             <p><strong>Published on:</strong> <?= htmlspecialchars($article['created_at']) ?></p>
             <div class="mb-5"><?= nl2br(htmlspecialchars($article['content'])) ?></div>
 
+            <?php if (isset($_SESSION['role']) && ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'editor')): ?>
+                <div class="text-end">
+                    <a href="edit_article.php?id=<?= $article_id ?>" class="btn btn-warning">Edit Article</a>
+                </div>
+            <?php endif; ?>
+
             <h2>Comments</h2>
             <?php if (!empty($comments)): ?>
                 <ul class="list-group">
@@ -100,18 +85,6 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
                 </ul>
             <?php else: ?>
                 <p>No comments yet. Be the first to comment!</p>
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <form action="view_article.php?id=<?= $article_id ?>" method="post" class="mt-4">
-                    <div class="mb-3">
-                        <label for="comment" class="form-label">Add a Comment:</label>
-                        <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            <?php else: ?>
-                <p><a href="login.php">Log in</a> to leave a comment.</p>
             <?php endif; ?>
         <?php endif; ?>
     </div>

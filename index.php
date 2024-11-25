@@ -16,7 +16,7 @@ try {
 
     $total_pages = ceil($total_articles / $articles_per_page);
 
-    $query = "SELECT a.article_id, a.title, a.content, a.created_at, u.username AS author 
+    $query = "SELECT a.article_id, a.title, a.content, a.image, a.created_at, u.username AS author 
               FROM articles a 
               JOIN users u ON a.author_id = u.user_id 
               ORDER BY a.created_at DESC 
@@ -51,12 +51,25 @@ try {
                 <?php foreach ($articles as $article): ?>
                     <div class="col-md-8 mb-4">
                         <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-title"><?= htmlspecialchars($article['title']) ?></h2>
-                                <p class="card-text"><strong>By:</strong> <?= htmlspecialchars($article['author']) ?></p>
-                                <p class="card-text"><?= nl2br(htmlspecialchars(substr($article['content'], 0, 200))) ?></p>
-                                <p class="card-text"><small class="text-muted">Published on: <?= htmlspecialchars($article['created_at']) ?></small></p>
-                                <a href="view_article.php?id=<?= $article['article_id'] ?>" class="btn btn-primary">Read Full Article</a>
+                            <div class="row g-0 align-items-center">
+                                <?php if (!empty($article['image'])): ?>
+                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                        <img src="uploads/<?= htmlspecialchars($article['image']) ?>" 
+                                             class="img-fluid rounded-start" 
+                                             alt="Article Image" 
+                                             style="max-height: 200px; max-width: 100%;">
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="<?= empty($article['image']) ? 'col-md-12' : 'col-md-8' ?>">
+                                    <div class="card-body">
+                                        <h2 class="card-title"><?= htmlspecialchars($article['title']) ?></h2>
+                                        <p class="card-text"><strong>By:</strong> <?= htmlspecialchars($article['author']) ?></p>
+                                        <p class="card-text"><?= nl2br(htmlspecialchars(substr($article['content'], 0, 200))) ?></p>
+                                        <p class="card-text"><small class="text-muted">Published on: <?= htmlspecialchars($article['created_at']) ?></small></p>
+                                        <a href="view_article.php?id=<?= $article['article_id'] ?>" class="btn btn-primary">Read Full Article</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
