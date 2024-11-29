@@ -21,7 +21,7 @@ if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['confirm_pass
                 header("Location: post_registration.php");
                 exit;
             } else {
-                $error = "Error registering user.";
+                $error = "Error registering user. Please try again.";
             }
         } catch (PDOException $e) {
             $error = "Error: " . $e->getMessage();
