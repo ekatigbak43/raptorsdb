@@ -7,7 +7,6 @@ if ($_POST && isset($_POST['username'], $_POST['password'], $_POST['confirm_pass
     $plaintext_password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Validate that passwords match
     if ($plaintext_password === $confirm_password) {
         $hashed_password = password_hash($plaintext_password, PASSWORD_DEFAULT);
 
