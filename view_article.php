@@ -27,6 +27,32 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
     $comment_statement->bindValue(':article_id', $article_id, PDO::PARAM_INT);
     $comment_statement->execute();
     $comments = $comment_statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($_POST && isset($_POST['comment'])) {
+        if (!isset($_SESSION['user_id'])) {
+            $error = "You must be logged in to comment.";
+        } else {
+            $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $user_id = $_SESSION['user_id'];
+
+            try {
+                $insert_comment_query = "INSERT INTO comments (article_id, user_id, comment, created_at) VALUES (:article_id, :user_id, :comment, NOW())";
+                $insert_statement = $db->prepare($insert_comment_query);
+                $insert_statement->bindValue(':article_id', $article_id, PDO::PARAM_INT);
+                $insert_statement->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+                $insert_statement->bindValue(':comment', $comment);
+
+                if ($insert_statement->execute()) {
+                    header("Location: view_article.php?id=$article_id");
+                    exit;
+                } else {
+                    $error = "Failed to post comment.";
+                }
+            } catch (PDOException $e) {
+                $error = "Error: " . $e->getMessage();
+            }
+        }
+    }
 } else {
     $error = "Invalid or missing article ID.";
 }
@@ -71,7 +97,7 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <p class="mb-1"><?= htmlspecialchars($comment['comment']) ?></p>
-                                <small><strong>By:</strong> <?= htmlspecialchars($comment['username']) ?> | <strong>On:</strong> <?= htmlspecialchars($comment['created_at']) ?></small>
+                                <small><strong>By:</strong> <?= htmlspecialchars($comment['username']) ?> | <strong>Created at:</strong> <?= htmlspecialchars($comment['created_at']) ?></small>
                             </div>
                             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                                 <a href="view_article.php?id=<?= $article_id ?>&delete_comment=<?= $comment['comment_id'] ?>" 
@@ -85,6 +111,18 @@ if ($_GET && isset($_GET['id']) && is_numeric($_GET['id'])) {
                 </ul>
             <?php else: ?>
                 <p>No comments yet. Be the first to comment!</p>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <form action="view_article.php?id=<?= $article_id ?>" method="post" class="mt-4">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Add a Comment:</label>
+                        <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            <?php else: ?>
+                <p class="text-center mt-4"><a href="login.php">Log in</a> to leave a comment.</p>
             <?php endif; ?>
         <?php endif; ?>
     </div>
